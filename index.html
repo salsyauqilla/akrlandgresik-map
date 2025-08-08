@@ -32,6 +32,12 @@
             font-size: 16px;
             cursor: pointer;
         }
+        /* New: CSS class for the highlight effect */
+        .highlight {
+            border-color: red !important;
+            border-width: 3px !important;
+            border-style: solid !important;
+        }
         </style>
         <title></title>
     </head>
@@ -107,6 +113,30 @@
         function setBounds() {
             map.setMaxBounds(map.getBounds());
         }
+        
+        // New: Home button functionality
+        document.getElementById('home-button').addEventListener('click', function() {
+            map.fitBounds(initialBounds);
+            // Optionally remove highlighting when returning home
+            removeHighlight();
+        });
+
+        // New: Variable to store the currently highlighted layer
+        var highlightedLayer = null;
+
+        // New: Function to remove the highlight from the previous layer
+        function removeHighlight() {
+            if (highlightedLayer) {
+                highlightedLayer.setStyle({
+                    weight: 1.0,
+                    color: 'rgba(35,35,35,1.0)',
+                    dashArray: '',
+                    fillOpacity: 1
+                });
+                highlightedLayer = null;
+            }
+        }
+        
         function pop_Karangrejo_0(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
@@ -435,10 +465,6 @@
                     <tr>\
                         <th scope="row">Pemilik</th>\
                         <td class="visible-with-data" id="Pemilik">' + (feature.properties['Pemilik'] !== null ? autolinker.link(String(feature.properties['Pemilik']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Keterangan</th>\
-                        <td class="visible-with-data" id="Keterangan">' + (feature.properties['Keterangan'] !== null ? autolinker.link(String(feature.properties['Keterangan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">error-percentage</th>\
@@ -1235,7 +1261,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(141,192,207,1.0)',
+                fillColor: 'rgba(100,93,94,1.0)',
                 interactive: true,
             }
                     break;
@@ -1337,8 +1363,7 @@
                         <td class="visible-with-data" id="PBB">' + (feature.properties['PBB'] !== null ? autolinker.link(String(feature.properties['PBB']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">tglbrakhir</th>\
-                        <td class="visible-with-data" id="tglbrakhir">' + (feature.properties['tglbrakhir'] !== null ? autolinker.link(String(feature.properties['tglbrakhir']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="tglbrakhir" colspan="2"><strong>tglbrakhir</strong><br />' + (feature.properties['tglbrakhir'] !== null ? autolinker.link(String(feature.properties['tglbrakhir']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Tanah Sisa</th>\
@@ -1360,8 +1385,10 @@
             layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_WestGateBanyuwangi_7_0() {
-            return {
+        function style_WestGateBanyuwangi_7_0(feature) {
+            switch(String(feature.properties['Status'])) {
+                case 'Available':
+                    return {
                 pane: 'pane_WestGateBanyuwangi_7',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -1371,8 +1398,115 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(232,157,67,1.0)',
+                fillColor: 'rgba(255,255,255,1.0)',
                 interactive: true,
+            }
+                    break;
+                case 'AVAILABLE':
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sold':
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,227,3,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'SOLD':
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,227,3,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(100,93,94,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'FUTURE DEVELOP':
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'HOLD':
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(34,131,192,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Anomaly':
+                    return {
+                pane: 'pane_WestGateBanyuwangi_7',
+                opacity: 1,
+                color: 'rgba(82,82,82,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,247,247,1.0)',
+                interactive: true,
+            }
+                    break;
             }
         }
         map.createPane('pane_WestGateBanyuwangi_7');
@@ -1389,94 +1523,76 @@
         });
         bounds_group.addLayer(layer_WestGateBanyuwangi_7);
         map.addLayer(layer_WestGateBanyuwangi_7);
-        
-        // New: A single feature group to search across all layers
-        var allLayers = L.featureGroup([
-            layer_Karangrejo_0,
-            layer_Kramat_1,
-            layer_Bedanten_2,
-            layer_Manyarejo_3,
-            layer_GEMWalkBetoyoKauman_4,
-            layer_GEMWalkBetoyoGuci_5,
-            layer_EastGateManyarsidorukun_6,
-            layer_WestGateBanyuwangi_7
-        ]);
-
-        // New: A variable to hold the default style of the searched layer
-        var originalStyle = null;
-        var highlightedLayer = null;
-
-        // New: The search control is now configured to work with all layers
-        var searchControl = new L.Control.Search({
-            layer: allLayers,
-            propertyName: 'Nama_unit',
-            marker: false, // Don't add a default marker
-            moveToLocation: function(latlng, title, map) {
-                // This function is no longer needed since we handle zoom in the event listener
-            }
-        });
-        map.addControl(searchControl);
-
-        // New: Event listener to handle the "locationfound" event
-        searchControl.on('search:locationfound', function(e) {
-            var layer = e.layer;
-            
-            // Revert previous highlighting if it exists
-            if (highlightedLayer) {
-                highlightedLayer.setStyle(originalStyle);
-            }
-            
-            // Get the original style of the layer
-            originalStyle = layer.options.style;
-
-            // Define the new highlight style
-            var highlightStyle = {
-                color: '#ff0000',
-                weight: 5,
-                opacity: 0.5,
-                fillColor: '#ff0000',
-                fillOpacity: 0.2
-            };
-
-            // Apply the new style to the found layer
-            layer.setStyle(highlightStyle);
-            
-            // Store the currently highlighted layer
-            highlightedLayer = layer;
-
-            // Zoom the map to the bounds of the found layer
-            map.fitBounds(layer.getBounds());
-            
-            // Revert the style after a few seconds
-            setTimeout(function() {
-                layer.setStyle(originalStyle);
-                highlightedLayer = null;
-            }, 3000); // 3000 milliseconds = 3 seconds
-        });
-        
-        // New: Add the home button functionality
-        document.getElementById('home-button').addEventListener('click', function() {
-            map.fitBounds(initialBounds);
-            // Revert any highlighting when the home button is clicked
-            if (highlightedLayer) {
-                highlightedLayer.setStyle(originalStyle);
-                highlightedLayer = null;
-            }
-        });
-
-        // New: Add the geolocation control
-        L.control.locate({
-            position: 'topleft',
-            strings: {
-                title: "Show me where I am"
-            },
-            locateOptions: {
-                maxZoom: 16
-            }
-        }).addTo(map);
-
         var baseMaps = {};
-        L.control.layers(baseMaps,{'West Gate Banyuwangi<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/WestGateBanyuwangi_7.png" />': layer_WestGateBanyuwangi_7,'East Gate Manyarsidorukun<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/EastGateManyarsidorukun_6.png" />': layer_EastGateManyarsidorukun_6,'GEM Walk Betoyo Guci<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/GEMWalkBetoyoGuci_5.png" />': layer_GEMWalkBetoyoGuci_5,'GEM Walk Betoyo Kauman<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/GEMWalkBetoyoKauman_4.png" />': layer_GEMWalkBetoyoKauman_4,'Manyarejo<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Manyarejo_3.png" />': layer_Manyarejo_3,'Bedanten<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Bedanten_2.png" />': layer_Bedanten_2,'Kramat<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Kramat_1.png" />': layer_Kramat_1,'Karangrejo<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Karangrejo_0.png" />': layer_Karangrejo_0,}).addTo(map);
+        var overlaysTree = [
+            {label: 'West Gate Banyuwangi', layer: layer_WestGateBanyuwangi_7},
+            {label: 'East Gate Manyarsidorukun', layer: layer_EastGateManyarsidorukun_6},
+            {label: 'GEM Walk Betoyo Guci', layer: layer_GEMWalkBetoyoGuci_5},
+            {label: 'GEM Walk Betoyo Kauman', layer: layer_GEMWalkBetoyoKauman_4},
+            {label: 'Manyarejo', layer: layer_Manyarejo_3},
+            {label: 'Bedanten', layer: layer_Bedanten_2},
+            {label: 'Kramat', layer: layer_Kramat_1},
+            {label: 'Karangrejo', layer: layer_Karangrejo_0},
+        ];
+        var lay = L.control.layers.tree(baseMaps, overlaysTree, {
+            // New: Adding search functionality to the layer control
+            collapsed: false,
+            sortLayers: true
+        });
+        lay.addTo(map);
+
+        // New: Search control functionality
+        var searchControl = new L.Control.Search({
+            layer: bounds_group,
+            propertyName: 'Nama_unit',
+            initial: false,
+            hideMarkerOnCollapse: true,
+            // New: This function handles what happens when a feature is found
+            moveToLocation: function(latlng, title, map) {
+                // Remove the previous highlight if one exists
+                removeHighlight();
+                
+                // Find the layer with the matching title
+                bounds_group.eachLayer(function(layer) {
+                    if (layer.feature.properties.Nama_unit == title) {
+                        highlightedLayer = layer;
+                        
+                        // Apply the highlight style
+                        layer.setStyle({
+                            weight: 3, // Thicker border
+                            color: 'rgba(255,0,0,1.0)', // Red color
+                            dashArray: '',
+                            fillOpacity: 0.5
+                        });
+                        
+                        // Zoom to the feature
+                        if (layer.getBounds) {
+                            map.fitBounds(layer.getBounds());
+                        } else {
+                            map.panTo(latlng);
+                        }
+                    }
+                });
+            }
+        });
+
+        searchControl.on('search:locationfound', function(e) {
+            console.log('Location found: ', e);
+        });
+
+        searchControl.on('search:collapsed', function(e) {
+            // Remove highlight when search is collapsed
+            removeHighlight();
+        });
+        map.addControl( searchControl );
+        
+        var bounds = bounds_group.getBounds();
+        map.fitBounds(bounds);
+        map.addControl(new L.Control.Locate({
+            locateOptions: {
+                maxZoom: 19
+            }
+        }));
         setBounds();
         </script>
     </body>
