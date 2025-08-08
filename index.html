@@ -1389,8 +1389,8 @@
         });
         bounds_group.addLayer(layer_WestGateBanyuwangi_7);
         map.addLayer(layer_WestGateBanyuwangi_7);
-
-        // New: Collect all layers into a single feature group for searching
+        
+        // New: A single feature group to search across all layers
         var allLayers = L.featureGroup([
             layer_Karangrejo_0,
             layer_Kramat_1,
@@ -1401,21 +1401,67 @@
             layer_EastGateManyarsidorukun_6,
             layer_WestGateBanyuwangi_7
         ]);
-        
-        // New: Add the search control
+
+        // New: A variable to hold the default style of the searched layer
+        var originalStyle = null;
+        var highlightedLayer = null;
+
+        // New: The search control is now configured to work with all layers
         var searchControl = new L.Control.Search({
             layer: allLayers,
             propertyName: 'Nama_unit',
-            marker: false,
+            marker: false, // Don't add a default marker
             moveToLocation: function(latlng, title, map) {
-                map.setView(latlng, 15);
+                // This function is no longer needed since we handle zoom in the event listener
             }
         });
         map.addControl(searchControl);
 
+        // New: Event listener to handle the "locationfound" event
+        searchControl.on('search:locationfound', function(e) {
+            var layer = e.layer;
+            
+            // Revert previous highlighting if it exists
+            if (highlightedLayer) {
+                highlightedLayer.setStyle(originalStyle);
+            }
+            
+            // Get the original style of the layer
+            originalStyle = layer.options.style;
+
+            // Define the new highlight style
+            var highlightStyle = {
+                color: '#ff0000',
+                weight: 5,
+                opacity: 0.5,
+                fillColor: '#ff0000',
+                fillOpacity: 0.2
+            };
+
+            // Apply the new style to the found layer
+            layer.setStyle(highlightStyle);
+            
+            // Store the currently highlighted layer
+            highlightedLayer = layer;
+
+            // Zoom the map to the bounds of the found layer
+            map.fitBounds(layer.getBounds());
+            
+            // Revert the style after a few seconds
+            setTimeout(function() {
+                layer.setStyle(originalStyle);
+                highlightedLayer = null;
+            }, 3000); // 3000 milliseconds = 3 seconds
+        });
+        
         // New: Add the home button functionality
         document.getElementById('home-button').addEventListener('click', function() {
             map.fitBounds(initialBounds);
+            // Revert any highlighting when the home button is clicked
+            if (highlightedLayer) {
+                highlightedLayer.setStyle(originalStyle);
+                highlightedLayer = null;
+            }
         });
 
         // New: Add the geolocation control
