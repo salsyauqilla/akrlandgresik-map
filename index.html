@@ -20,36 +20,8 @@
         }
         </style>
         <title></title>
-    
-        <!-- Leaflet Search -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet-control-search/dist/leaflet-search.min.css">
-        <script src="https://unpkg.com/leaflet-control-search/dist/leaflet-search.min.js"></script>
-
-        <!-- Leaflet EasyButton -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
-        <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-
-        <!-- Leaflet LocateControl -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
-        <script src="https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
-
     </head>
     <body>
-        
-        
-        
-        <div id="search-controls" style="position:absolute; z-index:9999; background:white; padding:5px; border-radius:4px; top:10px; left:50px;">
-          <label for="searchField">Search by: </label>
-          <select id="searchField">
-            <option value="Nama_unit">Nama Unit</option>
-            <option value="No_SHGB">No SHGB</option>
-            <option value="Status">Status</option>
-            <option value="NOP">NOP</option>
-          </select>
-        </div>
-
-
-
         <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
@@ -1520,66 +1492,6 @@
         });
         lay.addTo(map);
         setBounds();
-        
-
-
-// Combine all layers into one search group
-var allLayersGroup = L.featureGroup([
-    layer_Karangrejo_0,
-    layer_Kramat_1,
-    layer_Bedanten_2,
-    layer_Manyarejo_3,
-    layer_GEMWalkBetoyoKauman_4,
-    layer_GEMWalkBetoyoGuci_5,
-    layer_EastGateManyarsidorukun_6,
-    layer_WestGateBanyuwangi_7
-]);
-
-var currentProperty = document.getElementById('searchField').value;
-
-// Create search control (plugin provides its own search box)
-var searchControl = new L.Control.Search({
-    layer: allLayersGroup,
-    propertyName: currentProperty,
-    zoom: 18,
-    initial: false,
-    hideMarkerOnCollapse: true,
-    autoType: true,
-    minLength: 2,
-    position: 'topleft'
-}).addTo(map);
-
-// Update property when dropdown changes
-document.getElementById('searchField').addEventListener('change', function() {
-    currentProperty = this.value;
-    map.removeControl(searchControl);
-    searchControl = new L.Control.Search({
-        layer: allLayersGroup,
-        propertyName: currentProperty,
-        zoom: 18,
-        initial: false,
-        hideMarkerOnCollapse: true,
-        autoType: true,
-        minLength: 2,
-        position: 'topleft'
-    }).addTo(map);
-});
-
-// Home Button
-var defaultBounds = map.getBounds();
-L.easyButton('fa-home', function(btn, map){
-    map.fitBounds(defaultBounds);
-}, 'Zoom to home').addTo(map);
-
-// Geolocation Button
-L.control.locate({
-    position: 'topleft',
-    flyTo: true,
-    strings: { title: "Show my location" }
-}).addTo(map);
-
-
-
-</script>
+        </script>
     </body>
 </html>
