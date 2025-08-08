@@ -11,6 +11,10 @@
         <link rel="stylesheet" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/fontawesome-all.min.css">
         <link rel="stylesheet" href="css/leaflet.photon.css">
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-search@3.0.9/dist/leaflet-search.src.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+
         <style>
         html, body, #map {
             width: 100%;
@@ -18,12 +22,24 @@
             padding: 0;
             margin: 0;
         }
+        /* New: Style for the Home button */
+        #home-button {
+            position: absolute;
+            top: 10px; /* Adjust position to be visible */
+            left: 50px;
+            z-index: 1000;
+            padding: 5px 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
         </style>
         <title></title>
     </head>
     <body>
         <div id="map">
         </div>
+        <button id="home-button">Home</button>
+
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -35,6 +51,10 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet.photon.js"></script>
+
+        <script src="https://unpkg.com/leaflet-search@3.0.9/dist/leaflet-search.src.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
         <script src="data/Karangrejo_0.js"></script>
         <script src="data/Kramat_1.js"></script>
         <script src="data/Bedanten_2.js"></script>
@@ -43,10 +63,12 @@
         <script src="data/GEMWalkBetoyoGuci_5.js"></script>
         <script src="data/EastGateManyarsidorukun_6.js"></script>
         <script src="data/WestGateBanyuwangi_7.js"></script>
+
         <script>
+        var initialBounds = [[-7.106138554972598,112.55820945535116],[-7.025097395981631,112.66621411123899]];
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[-7.106138554972598,112.55820945535116],[-7.025097395981631,112.66621411123899]]);
+        }).fitBounds(initialBounds);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -65,19 +87,19 @@
          return tempDiv.innerHTML;
         }
         // add class to format popup if it contains media
-		function addClassToPopupIfMedia(content, popup) {
-			var tempDiv = document.createElement('div');
-			tempDiv.innerHTML = content;
-			if (tempDiv.querySelector('td img')) {
-				popup._contentNode.classList.add('media');
-					// Delay to force the redraw
-					setTimeout(function() {
-						popup.update();
-					}, 10);
-			} else {
-				popup._contentNode.classList.remove('media');
-			}
-		}
+        function addClassToPopupIfMedia(content, popup) {
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            if (tempDiv.querySelector('td img')) {
+                popup._contentNode.classList.add('media');
+                    // Delay to force the redraw
+                    setTimeout(function() {
+                        popup.update();
+                    }, 10);
+            } else {
+                popup._contentNode.classList.remove('media');
+            }
+        }
         var zoomControl = L.control.zoom({
             position: 'topleft'
         }).addTo(map);
@@ -125,10 +147,10 @@
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_Karangrejo_0_0() {
@@ -222,10 +244,10 @@
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_Kramat_1_0(feature) {
@@ -428,10 +450,10 @@
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_Bedanten_2_0(feature) {
@@ -544,10 +566,10 @@
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_Manyarejo_3_0(feature) {
@@ -740,10 +762,10 @@
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_GEMWalkBetoyoKauman_4_0(feature) {
@@ -853,6 +875,21 @@
                 interactive: true,
             }
                     break;
+                case 'Anomaly':
+                    return {
+                pane: 'pane_GEMWalkBetoyoKauman_4',
+                opacity: 1,
+                color: 'rgba(82,82,82,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,247,247,1.0)',
+                interactive: true,
+            }
+                    break;
             }
         }
         map.createPane('pane_GEMWalkBetoyoKauman_4');
@@ -906,31 +943,26 @@
                         <td class="visible-with-data" id="PBB">' + (feature.properties['PBB'] !== null ? autolinker.link(String(feature.properties['PBB']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">tglbrakhir</th>\
-                        <td class="visible-with-data" id="tglbrakhir">' + (feature.properties['tglbrakhir'] !== null ? autolinker.link(String(feature.properties['tglbrakhir']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="tglbrakhir" colspan="2"><strong>tglbrakhir</strong><br />' + (feature.properties['tglbrakhir'] !== null ? autolinker.link(String(feature.properties['tglbrakhir']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Tanah Sisa</th>\
                         <td class="visible-with-data" id="Tanah Sisa">' + (feature.properties['Tanah Sisa'] !== null ? autolinker.link(String(feature.properties['Tanah Sisa']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Selisih</th>\
-                        <td class="visible-with-data" id="Selisih">' + (feature.properties['Selisih'] !== null ? autolinker.link(String(feature.properties['Selisih']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
                         <th scope="row">Pemilik</th>\
                         <td class="visible-with-data" id="Pemilik">' + (feature.properties['Pemilik'] !== null ? autolinker.link(String(feature.properties['Pemilik']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">error-percentage</th>\
-                        <td class="visible-with-data" id="error-percentage">' + (feature.properties['error-percentage'] !== null ? autolinker.link(String(feature.properties['error-percentage']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Selisih</th>\
+                        <td class="visible-with-data" id="Selisih">' + (feature.properties['Selisih'] !== null ? autolinker.link(String(feature.properties['Selisih']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_GEMWalkBetoyoGuci_5_0(feature) {
@@ -1006,7 +1038,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(212,79,95,1.0)',
+                fillColor: 'rgba(120,68,233,1.0)',
                 interactive: true,
             }
                     break;
@@ -1037,6 +1069,21 @@
                 fill: true,
                 fillOpacity: 1,
                 fillColor: 'rgba(34,131,192,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Anomaly':
+                    return {
+                pane: 'pane_GEMWalkBetoyoGuci_5',
+                opacity: 1,
+                color: 'rgba(82,82,82,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,247,247,1.0)',
                 interactive: true,
             }
                     break;
@@ -1093,8 +1140,7 @@
                         <td class="visible-with-data" id="PBB">' + (feature.properties['PBB'] !== null ? autolinker.link(String(feature.properties['PBB']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">tglbrakhir</th>\
-                        <td class="visible-with-data" id="tglbrakhir">' + (feature.properties['tglbrakhir'] !== null ? autolinker.link(String(feature.properties['tglbrakhir']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="tglbrakhir" colspan="2"><strong>tglbrakhir</strong><br />' + (feature.properties['tglbrakhir'] !== null ? autolinker.link(String(feature.properties['tglbrakhir']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">Tanah Sisa</th>\
@@ -1105,23 +1151,15 @@
                         <td class="visible-with-data" id="Pemilik">' + (feature.properties['Pemilik'] !== null ? autolinker.link(String(feature.properties['Pemilik']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Keterangan</th>\
-                        <td class="visible-with-data" id="Keterangan">' + (feature.properties['Keterangan'] !== null ? autolinker.link(String(feature.properties['Keterangan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">error-percentage</th>\
-                        <td class="visible-with-data" id="error-percentage">' + (feature.properties['error-percentage'] !== null ? autolinker.link(String(feature.properties['error-percentage']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Selisih_auto</th>\
-                        <td class="visible-with-data" id="Selisih_auto">' + (feature.properties['Selisih_auto'] !== null ? autolinker.link(String(feature.properties['Selisih_auto']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Selisih</th>\
+                        <td class="visible-with-data" id="Selisih">' + (feature.properties['Selisih'] !== null ? autolinker.link(String(feature.properties['Selisih']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style_EastGateManyarsidorukun_6_0(feature) {
@@ -1197,7 +1235,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(123,136,206,1.0)',
+                fillColor: 'rgba(141,192,207,1.0)',
                 interactive: true,
             }
                     break;
@@ -1307,37 +1345,23 @@
                         <td class="visible-with-data" id="Tanah Sisa">' + (feature.properties['Tanah Sisa'] !== null ? autolinker.link(String(feature.properties['Tanah Sisa']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">SHGB_pdf</th>\
-                        <td class="visible-with-data" id="SHGB_pdf">' + (feature.properties['SHGB_pdf'] !== null ? autolinker.link(String(feature.properties['SHGB_pdf']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
                         <th scope="row">Pemilik</th>\
                         <td class="visible-with-data" id="Pemilik">' + (feature.properties['Pemilik'] !== null ? autolinker.link(String(feature.properties['Pemilik']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">Keterangan</th>\
-                        <td class="visible-with-data" id="Keterangan">' + (feature.properties['Keterangan'] !== null ? autolinker.link(String(feature.properties['Keterangan']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">error_percentage</th>\
-                        <td class="visible-with-data" id="error_percentage">' + (feature.properties['error_percentage'] !== null ? autolinker.link(String(feature.properties['error_percentage']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">Selisih_auto</th>\
-                        <td class="visible-with-data" id="Selisih_auto">' + (feature.properties['Selisih_auto'] !== null ? autolinker.link(String(feature.properties['Selisih_auto']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <th scope="row">Selisih</th>\
+                        <td class="visible-with-data" id="Selisih">' + (feature.properties['Selisih'] !== null ? autolinker.link(String(feature.properties['Selisih']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function style_WestGateBanyuwangi_7_0(feature) {
-            switch(String(feature.properties['Status'])) {
-                case 'Available':
-                    return {
+        function style_WestGateBanyuwangi_7_0() {
+            return {
                 pane: 'pane_WestGateBanyuwangi_7',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
@@ -1347,115 +1371,8 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,255,255,1.0)',
+                fillColor: 'rgba(232,157,67,1.0)',
                 interactive: true,
-            }
-                    break;
-                case 'AVAILABLE':
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,255,255,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'Sold':
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,227,3,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'SOLD':
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(0,227,3,1.0)',
-                interactive: true,
-            }
-                    break;
-                default:
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(208,123,134,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'FUTURE DEVELOP':
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,255,255,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'HOLD':
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(34,131,192,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'Anomaly':
-                    return {
-                pane: 'pane_WestGateBanyuwangi_7',
-                opacity: 1,
-                color: 'rgba(82,82,82,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(247,247,247,1.0)',
-                interactive: true,
-            }
-                    break;
             }
         }
         map.createPane('pane_WestGateBanyuwangi_7');
@@ -1472,25 +1389,48 @@
         });
         bounds_group.addLayer(layer_WestGateBanyuwangi_7);
         map.addLayer(layer_WestGateBanyuwangi_7);
-        var overlaysTree = [
-            {label: 'West Gate Banyuwangi<br /><table><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_Available0.png" /></td><td>Available</td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_AVAILABLE1.png" /></td><td>AVAILABLE</td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_Sold2.png" /></td><td>Sold</td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_SOLD3.png" /></td><td>SOLD</td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_4.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_FUTUREDEVELOP5.png" /></td><td>FUTURE DEVELOP</td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_HOLD6.png" /></td><td>HOLD</td></tr><tr><td style="text-align: center;"><img src="legend/WestGateBanyuwangi_7_Anomaly7.png" /></td><td>Anomaly</td></tr></table>', layer: layer_WestGateBanyuwangi_7},
-            {label: 'East Gate Manyarsidorukun<br /><table><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_Available0.png" /></td><td>Available</td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_AVAILABLE1.png" /></td><td>AVAILABLE</td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_Sold2.png" /></td><td>Sold</td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_SOLD3.png" /></td><td>SOLD</td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_4.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_FUTUREDEVELOP5.png" /></td><td>FUTURE DEVELOP</td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_HOLD6.png" /></td><td>HOLD</td></tr><tr><td style="text-align: center;"><img src="legend/EastGateManyarsidorukun_6_Anomaly7.png" /></td><td>Anomaly</td></tr></table>', layer: layer_EastGateManyarsidorukun_6},
-            {label: 'GEM Walk Betoyo Guci<br /><table><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_Available0.png" /></td><td>Available</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_AVAILABLE1.png" /></td><td>AVAILABLE</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_Sold2.png" /></td><td>Sold</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_SOLD3.png" /></td><td>SOLD</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_4.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_FUTUREDEVELOP5.png" /></td><td>FUTURE DEVELOP</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoGuci_5_HOLD6.png" /></td><td>HOLD</td></tr></table>', layer: layer_GEMWalkBetoyoGuci_5},
-            {label: 'GEM Walk Betoyo Kauman<br /><table><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_Available0.png" /></td><td>Available</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_AVAILABLE1.png" /></td><td>AVAILABLE</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_Sold2.png" /></td><td>Sold</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_SOLD3.png" /></td><td>SOLD</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_4.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_FUTUREDEVELOP5.png" /></td><td>FUTURE DEVELOP</td></tr><tr><td style="text-align: center;"><img src="legend/GEMWalkBetoyoKauman_4_HOLD6.png" /></td><td>HOLD</td></tr></table>', layer: layer_GEMWalkBetoyoKauman_4},
-            {label: 'Manyarejo<br /><table><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_Available0.png" /></td><td>Available</td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_AVAILABLE1.png" /></td><td>AVAILABLE</td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_Sold2.png" /></td><td>Sold</td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_SOLD3.png" /></td><td>SOLD</td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_4.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_FUTUREDEVELOP5.png" /></td><td>FUTURE DEVELOP</td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_HOLD6.png" /></td><td>HOLD</td></tr><tr><td style="text-align: center;"><img src="legend/Manyarejo_3_Anomaly7.png" /></td><td>Anomaly</td></tr></table>', layer: layer_Manyarejo_3},
-            {label: 'Bedanten<br /><table><tr><td style="text-align: center;"><img src="legend/Bedanten_2_0.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/Bedanten_2_Anomaly1.png" /></td><td>Anomaly</td></tr></table>', layer: layer_Bedanten_2},
-            {label: 'Kramat<br /><table><tr><td style="text-align: center;"><img src="legend/Kramat_1_Available0.png" /></td><td>Available</td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_AVAILABLE1.png" /></td><td>AVAILABLE</td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_Sold2.png" /></td><td>Sold</td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_SOLD3.png" /></td><td>SOLD</td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_FUTUREDEVELOP4.png" /></td><td>FUTURE DEVELOP</td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_HOLD5.png" /></td><td>HOLD</td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_6.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/Kramat_1_Anomaly7.png" /></td><td>Anomaly</td></tr></table>', layer: layer_Kramat_1},
-            {label: '<img src="legend/Karangrejo_0.png" /> Karangrejo', layer: layer_Karangrejo_0},]
-        var lay = L.control.layers.tree(null, overlaysTree,{
-            //namedToggle: true,
-            //selectorBack: false,
-            //closedSymbol: '&#8862; &#x1f5c0;',
-            //openedSymbol: '&#8863; &#x1f5c1;',
-            //collapseAll: 'Collapse all',
-            //expandAll: 'Expand all',
-            collapsed: true,
+
+        // New: Collect all layers into a single feature group for searching
+        var allLayers = L.featureGroup([
+            layer_Karangrejo_0,
+            layer_Kramat_1,
+            layer_Bedanten_2,
+            layer_Manyarejo_3,
+            layer_GEMWalkBetoyoKauman_4,
+            layer_GEMWalkBetoyoGuci_5,
+            layer_EastGateManyarsidorukun_6,
+            layer_WestGateBanyuwangi_7
+        ]);
+        
+        // New: Add the search control
+        var searchControl = new L.Control.Search({
+            layer: allLayers,
+            propertyName: 'Nama_unit',
+            marker: false,
+            moveToLocation: function(latlng, title, map) {
+                map.setView(latlng, 15);
+            }
         });
-        lay.addTo(map);
+        map.addControl(searchControl);
+
+        // New: Add the home button functionality
+        document.getElementById('home-button').addEventListener('click', function() {
+            map.fitBounds(initialBounds);
+        });
+
+        // New: Add the geolocation control
+        L.control.locate({
+            position: 'topleft',
+            strings: {
+                title: "Show me where I am"
+            },
+            locateOptions: {
+                maxZoom: 16
+            }
+        }).addTo(map);
+
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'West Gate Banyuwangi<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/WestGateBanyuwangi_7.png" />': layer_WestGateBanyuwangi_7,'East Gate Manyarsidorukun<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/EastGateManyarsidorukun_6.png" />': layer_EastGateManyarsidorukun_6,'GEM Walk Betoyo Guci<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/GEMWalkBetoyoGuci_5.png" />': layer_GEMWalkBetoyoGuci_5,'GEM Walk Betoyo Kauman<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/GEMWalkBetoyoKauman_4.png" />': layer_GEMWalkBetoyoKauman_4,'Manyarejo<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Manyarejo_3.png" />': layer_Manyarejo_3,'Bedanten<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Bedanten_2.png" />': layer_Bedanten_2,'Kramat<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Kramat_1.png" />': layer_Kramat_1,'Karangrejo<br />&nbsp;&nbsp;&nbsp;&nbsp;<img src="legend/Karangrejo_0.png" />': layer_Karangrejo_0,}).addTo(map);
         setBounds();
         </script>
     </body>
