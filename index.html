@@ -1546,38 +1546,30 @@
             layer: bounds_group,
             propertyName: 'Nama_unit',
             initial: false,
-            hideMarkerOnCollapse: true,
-            // New: This function handles what happens when a feature is found
-            moveToLocation: function(latlng, title, map) {
-                // Remove the previous highlight if one exists
-                removeHighlight();
-                
-                // Find the layer with the matching title
-                bounds_group.eachLayer(function(layer) {
-                    if (layer.feature.properties.Nama_unit == title) {
-                        highlightedLayer = layer;
-                        
-                        // Apply the highlight style
-                        layer.setStyle({
-                            weight: 3, // Thicker border
-                            color: 'rgba(255,0,0,1.0)', // Red color
-                            dashArray: '',
-                            fillOpacity: 0.5
-                        });
-                        
-                        // Zoom to the feature
-                        if (layer.getBounds) {
-                            map.fitBounds(layer.getBounds());
-                        } else {
-                            map.panTo(latlng);
-                        }
-                    }
-                });
-            }
+            hideMarkerOnCollapse: true
         });
 
+        // New: Event listener for when a location is found
         searchControl.on('search:locationfound', function(e) {
-            console.log('Location found: ', e);
+            // Remove the previous highlight if one exists
+            removeHighlight();
+            
+            highlightedLayer = e.layer;
+            
+            // Apply the highlight style to the found layer
+            e.layer.setStyle({
+                weight: 3, // Thicker border
+                color: 'rgba(255,0,0,1.0)', // Red color
+                dashArray: '',
+                fillOpacity: 0.5
+            });
+
+            // Zoom to the feature using its bounds or a default view for points
+            if (e.layer.getBounds) {
+                map.fitBounds(e.layer.getBounds(), {maxZoom: 17});
+            } else {
+                map.setView(e.latlng, 17);
+            }
         });
 
         searchControl.on('search:collapsed', function(e) {
